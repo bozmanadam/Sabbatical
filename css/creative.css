@@ -209,6 +209,7 @@ header .header-content .header-content-inner p {
   }
 }
 .section-heading {
+  position: relative;
   margin-top: 0;
 }
 .service-box {
@@ -219,6 +220,9 @@ header .header-content .header-content-inner p {
   .service-box {
     margin: 20px auto 0;
   }
+}
+.service-box{
+
 }
 .service-box p {
   margin-bottom: 0;
