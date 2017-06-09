@@ -1,0 +1,20 @@
+@import url("fonts.css");
+@import url("ui-elements.css");
+
+
+
+
+
+
+/****************************************/
+
+div.horizontal{
+	overflow: hidden;
+}
+div.horizontal>p{
+	margin-left: 20px;
+	float: left;
+}
+select, input{
+	width: 200px;
+}
