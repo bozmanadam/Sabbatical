@@ -1,30 +1,86 @@
 ---
+description: 'A page that displays lists of blog posts.'
 action: 'cmscontent:archive'
 template: main
 protocol: all
 published: true
-name: Blog
+name: 'Blog'
 url: /blog
 ---
-<div class="wrapper">
-    <section>
 
-        {% set publishedPosts = 0 %}
-        {% for post in archives %}
-            {% if post.status == "published" %}
-                {% set publishedPosts = publishedPosts + 1 %}
-            {% endif %}
-            <article>
-                <h2><a href="blog/{{ post.guid }}">{{ post.title }}</a></h2>
-                {{ post.excerpt | unescape }}
-                <a href="blog/{{ post.guid }}">Read More</a>
-            </article>
-            <hr>
-        {% endfor %}
-
-        {% if archives | length == 0 or publishedPosts == 0 %}
-            <h2>No posts found</h2>
+<script type="text/javascript">
+  var blogPosts = {
+    "blog": [
+      {% for post in archives %}
+        {% if post.type is same as('blog') %}
+          {
+            "title": "{{ post.title }}",
+            "author": {
+              "name": "{{ post.author_name }}",
+              "image": "{{ profile_image.thumbnail(252, 'auto')|default('http://placehold.it/100x100') }}"
+            },
+            "thumbnail": "{{ post.featured_image.thumbnail(1000, 'auto')|default('http://placehold.it/1000x365') }}",
+            "permalink": "{{ post.slug }}",
+            "categories": [
+              {% for category in post.categories %}
+                "{{ category.name }}"
+                {% if not loop.last %},{% endif %}
+              {% endfor %}
+            ],
+            "publish_date": "{{ post.published_on |  date("m-d-Y") }}",
+            "excerpt": "{{ post.excerpt | unescape }}"
+          }
+          {% if not loop.last %},{% endif %}
         {% endif %}
+      {% endfor %}
+    ]
+  }
+</script>
 
-    </section>
+{{ partial('partial-banner', {
+  'banner': {
+    'button': false,
+    'title': 'The Blog',
+    'subheading': 'Where possibilities are endless',
+    'backgroundImage': 'images/living-room-tile.jpg' | theme_resource
+  }}) }}
+
+<div layout="row" layout-align="center start" ng-controller="BlogCtrl">
+  <div layout="row" layout-xs="column" class="content-container padding-y-mobile padding-mobile" layout-align="center start">
+    <div layout="column" flex>
+      <div layout="row" layout-wrap>
+        {% for post in archives %}
+          {% if post.type is same as('blog') %}
+            {{ partial('partial-blog-card-twig', { 'post': post }) }}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- sidebar -->
+    <div layout="column" class="padding-small padding-x-medium no-padding-mobile">
+      {% set blogCategories = [] %}
+      <h4>Categories</h4>
+      <ul class="theme-list">
+        {% for post in cmsContent('blog')|extended_sort('published_on', false) %}
+          {% for category in post.categories %}
+              {% if category.name not in blogCategories %}
+                <li class="md-caption">
+                  <a href="/blog/archive/{{ category.slug }}">{{ category.name }}</a>
+                </li>
+                {% set blogCategories = blogCategories|merge([category.name]) %}
+              {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </ul>
+
+      <p class="ls-heading md-caption theme-heading">Archive</p>
+      <ul class="theme-list">
+        <li class="md-caption" ng-repeat="archive in months track by $index">
+          <a ng-href="/blog/archive/date/[[ archive | date:'yyyy/MM' ]]">[[ archive | date:'MMMM yyyy' ]]</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
 </div>

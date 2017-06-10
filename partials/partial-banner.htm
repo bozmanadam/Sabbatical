@@ -1,0 +1,34 @@
+---
+description: 'Displays a banner image'
+---
+<div class="banner-container background-cover" layout="row" layout-align="center center" layout-fill
+  style="background-image: url('{% if banner.backgroundImage is not empty %}{{ banner.backgroundImage }}{% elseif category is not empty %}{{ category.images[1].thumbnail(1280, 'auto') }}{% else %}{{ theme.bannerImage.thumbnail('auto', 'auto') }}{% endif %}');" 
+  ng-class="{ 'banner-short' : banner.short }" {% if category is not empty %} ng-style="setBackground()" {% endif %}>
+
+  {% if banner.overlay %}
+    <div class="banner-overlay"></div>
+  {% endif %}
+
+  <div class="banner-text padding-mobile">
+    <h1 class="ls-heading" {% if category is not empty and archives is empty %} ng-bind="title" {% endif %}>
+      {% if banner.title is not empty %}
+        {{ banner.title }}
+      {% else %}
+        {{ theme.bannerTitleText }}
+      {% endif %}
+    </h1>
+    <p class="ls-subheading" {% if category is not empty and archives is empty %} ng-bind="shortDescription" {% endif %}>
+      {% if banner.title is not empty %}
+        {{ banner.subheading }}
+      {% else %}
+        {{ theme.bannerSentenceText }}
+      {% endif %}
+    </p>
+
+    {% if (category is empty) and ( banner.button )  and banner.button.text is not empty %}
+      <md-button class="ls-button {% if theme.bannerButtonStyle == 'outline' %}md-button-outline{% endif %}" href="{% if banner.button.href is empty %} /products {% else %} {{ banner.button.href }} {% endif %}">
+        {{ banner.button.text }}
+      </md-button>
+    {% endif %}
+  </div>
+</div>

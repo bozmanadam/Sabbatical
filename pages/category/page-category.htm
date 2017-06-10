@@ -1,61 +1,49 @@
 ---
+description: 'A shop page defaulted to show a certain category.'
 action: 'shop:category'
 template: main
 protocol: all
 published: true
-name: Category
-url: '/category/:urlName@/:page?'
+name: Categories
+url: /categories/:urlName
 ---
-<div class="wrapper">
-<h1>{{ category.name }}</h1>
-{% tree categories %}
-<nav style="float: left; width: auto; margin-top: 1em"><ul><li class="categories">
-	<a href="#">Categories ▾</a>
-	<ul>
-		{% for category in tree.items %}
-		<li>
-			<h3><a href="/category/{{ category.fullUrlName }}">{{ category.name }}</a></h3>
-			
-			{% branch category.children %}
-		</li>
-		{% endfor %}
-	</ul>
-</li></ul></nav>
-{% endtree %}
 
-{% if not category %}
-	<h2>Category not found</h2>
-	<p>We are sorry, the requested category was not found.</p>
-{% else %}
+<script type="text/javascript">
+
+  var $route = {
+    current: {
+      params: {
+        parentCategory:
+        {% if category.parent is not empty %}
+          "{{ category.parent.url_name }}",
+        {% else %}
+          "{{ category.url_name }}",
+        {% endif %}
+        category:
+        {% if category.parent is not empty %}
+          "{{ category.url_name }}",
+        {% else %}
+          null,
+        {% endif %}
+      }
+    }
+  }
+
+  var categoryProducts = {
+    "products": [
+      {{ partial("partial-product", { "products": category.productList }) }}
+    ]
+  }
+
+</script>
+
+<div ng-controller="CategoriesCtrl">
+
+  {{ partial('partial-banner') }}
+
+  {{ partial('partial-categorypage') }}
+
+  {{ partial('partial-featured-sale') }}
 
 
-	{% paginate products by 9 %}
-	<ul style="clear: both;">
-		{% for product in pagination.items %}
-			{% set is_on_sale = product.onSale %}
-			{% set page_url = '/product/' ~ product.url_name %}
-			<div class="product shop-product">
-			<li class="{{ is_on_sale ? 'sale' : null }}">
-				<figure>
-					<a href="{{ page_url }}">
-					<img src="{{ product.images.first.thumbnail(365, 365)|default('http://placehold.it/365x365') }}" width="365" height="365" alt="{{ product.images.first.description }}" title="{{ product.images.first.title }}"/>
-					</a>
-				  <figcaption>
-					  <h3><a href="/product/{{ product.url_name }}" class="btn btn-default">{{ product.name }}</a></h3>
-						<h2>{{ product.price|currency }}</h2>
-						{% if is_on_sale %}
-							<h2 class="oldprice">{{ product.fullPrice|currency }}</h2>
-						{% endif %}
-					</figcaption>
-				</figure>
-
-			</li>
-			</div>
-		{% endfor %}
-	</ul>
-	<div class="nav-wrap">
-		{% navigation %}		
-	</div>
-	{% endpaginate %}
-{% endif %}
 </div>

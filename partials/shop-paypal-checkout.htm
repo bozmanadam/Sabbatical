@@ -1,0 +1,8 @@
+---
+description: 'Paypal checkout step controller.'
+---
+{% if step == 'shipping_method' %}
+{{ partial('shop-paypal-checkout-shippingmethod') }}
+{% elseif step == 'pay' %}
+{{ partial('shop-paypal-checkout-pay') }}
+{% endif %}

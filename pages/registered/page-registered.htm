@@ -1,16 +1,24 @@
 ---
+description: 'Page where customers go after registering.'
 template: main
 protocol: all
 published: true
 name: Registered
 url: /registered
 ---
-<div class="wrapper">
-	<h1>{{ page.title }}</h1>
-	<h2>Thank you for registering, a confirmation email has been sent to your email address.</h2>
+
+{{ partial('partial-banner', {
+  'banner': {
+    'button': false,
+    'title': 'Thank you for registering',
+    'backgroundImage': 'images/living-room-tile.jpg' | theme_resource
+  }}) }}
+
+<div layout="column" layout-align="center center" class="bg-white padding-regular">
+	<p class="line-height-15 font-14">A confirmation email has been sent to your email address.</p>
 	{% if customer %}
-	  <p>You have been automatically logged in.</p>
+	    <p class="line-height-15 font-14">You have been automatically logged in.</p>
 	{% else %}
-	  <p>Please <a href="{{ root_url('/sign-in') }}">sign in</a> using your email and password.</p>
+    	<p>Please <a href="{{ root_url('/login') }}">sign in</a> using your email and password.</p>
 	{% endif %}
 </div>

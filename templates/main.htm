@@ -1,153 +1,148 @@
 <!DOCTYPE html>
 <html>
-<head>
-  {{ code_block('setup') }}
+  <head>
+    <meta charset="utf-8" />
+    <!-- Set the viewport width to device width for mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="Description" content="{{ page.description }}"/>
+    <meta name="Keywords" content="{{ page.keywords }}"/>
 
-  <meta charset="utf-8" />
+    {% if theme.twitterUrl %}
+      <meta name="twitter:site" content="@{{ theme.twitterUrl }}" />
+      {% if product %}
+      <meta name="twitter:card" content="summary" />
+      <meta property="og:url" content="https:{{ site_url('/product/') ~ product.url_name }}" />
+      <meta property="og:title" content="{{ product.name }} | {{ theme.storeTitle }}" />
+      <meta name="twitter:title" content="{{ product.name }} | {{ theme.storeTitle }}" />
+      <meta name="twitter:description" content="{{ product.short_description | unescape }}" />
+      <meta property="og:description" content="{{ product.short_description | unescape }}" />
+      <meta name="twitter:image:src" content="https:{{ product.images.first.thumbnail(280, 'auto') }}" />
+      {% endif %}
+    {% endif %}
+    
+    {% if amazonWidgetsJs %}
+        {{ amazonWidgetsJs }}
+    {% endif %}
 
-  <!-- Set the viewport width to device width for mobile -->
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="Description" content="{{ page.description }}"/>
-  <meta name="Keywords" content="{{ page.keywords }}"/>
-  <link rel="icon" type="image/png" href="{{ theme.faviconImage.thumbnail('16', '16') }}"/>
+    <link href="https://file.myfontastic.com/n6vo44Re5QaWo8oCKShBs7/icons.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ theme.faviconImage.thumbnail('16', '16') }}"/>
+    <title>
+    	{% if page.title %}
+    	 {{ page.title }} |
+    	{% elseif product.name %}
+        {{ product.name }} |
+    	{% endif %}
+      {{ theme.storeTitle }}
+    </title>
+    <link rel="stylesheet" type="text/css" href="/cms/lemonstand.css">
+    <link rel="stylesheet" type="text/css" href="{{ 'css/vendor.css' | theme_resource }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'css/main.css' | theme_resource }}">
+    <link rel="stylesheet" type="text/css" href="{{ 'css/meyer.css' | theme_resource }}">
+    <script type="text/javascript" src="{{ 'js/jquery.js'|theme_resource }}"></script>
+    <script type="text/javascript" src="{{ 'js/vendor.min.js' | theme_resource }}"></script>
+    <script type="text/javascript" src="/cms/lemonstand.js"></script>
+    <script type="text/javascript">
+      var themePrimaryColor = '{{ theme.primaryColor }}';
+      var themeSecondaryColor = '{{ theme.secondaryColor }}';
+      var themeAccentColor = '{{ theme.accentColor }}';
 
-  <title>Sabbatical</title>
+      var themeHeadingFont = ('{{ theme.headingFont }}').split(',');
+      var themeBodyFont = ('{{ theme.bodyFont }}').split(',');
 
-  <link rel="stylesheet" type="text/css" href="/cms/lemonstand.css">
-  <link rel="stylesheet" type="text/css" href="{{ 'stylesheets/main.css'|theme_resource }}">
-  <link rel="stylesheet" type="text/css" href="{{ 'stylesheets/responsive.css'|theme_resource }}">
+      WebFont.load({
+        google: {
+          families: ['Material Icons', themeHeadingFont[0],themeBodyFont[0]]
+        }
+      });
 
-  <script type="text/javascript" src="{{ 'scripts/jquery.js'|theme_resource }}"></script>
-  <script type="text/javascript" src="{{ 'scripts/app.js'|theme_resource }}"></script>
-  <script type="text/javascript" src="/cms/lemonstand.js"></script>
+      var categories = {
+        {{ partial("partial-categories") }}
+      };
+    </script>
+    <script type="text/javascript" src="{{ 'js/meyer.js' | theme_resource }}"></script>
+    <style>
+      #loading-indicator,
+      [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak { display: none !important; }
+      .layout-fill { height:auto !important; }
+      md-grid-tile.product-on-sale div.on-sale-container,
+      .md-button.ls-button:not(.md-button-outline):not(.md-primary),
+      .ls-card-form .submit-button,
+      .ls-card-form .delete-button,
+      .ls-card-form .submit-button:hover,
+      .ls-card-form .delete-button:hover
+        { background-color: {{ theme.secondaryColor }}; color: #FFFFFF; 
+      }
+      .md-button.ls-button.md-primary { background-color: {{ theme.primaryColor }}; color: #FFFFFF; }
+      .md-button .md-ripple-container,
+      .md-button.ls-button,
+      .ls-card-form .submit-button,
+      .ls-card-form .delete-button { border-radius: {{ theme.buttonShape }}; }
+      #category-menu a.ls-heading,
+      #category-menu ul.theme-list li a,
+      #navbar nav .md-button,
+      #footer .ls-heading,
+      #footer ul.theme-list li a { color: {{ theme.headerTextColor }}; }
+      #footer,
+      div#category-menu .content-container,
+      #navbar div.nav-container { background-color: {{ theme.headerBackgroundColor }}; }
+      .md-small-button.page-active span,
+      a.ls-link:hover,
+      .ls-page a:hover,
+      md-menu-content md-menu-item button.md-button.button-active,
+      ul.theme-list li a.filter-active,
+      ul.theme-list li a:hover { opacity: 1; color: {{ theme.accentColor }}; }
+      .ls-product-tile .cart-button:hover md-icon { color: {{ theme.primaryColor }}; }
+      #blog-body blockquote { border-color: {{ theme.secondaryColor }};}
+      #blog-body blockquote:before,
+      #blog-body blockquote:after { color:{{ theme.secondaryColor }}; }
+      md-grid-tile.ls-product-tile md-grid-tile-footer { background: {{ theme.productTileOverlay }}; }
+      #featured-categories md-grid-tile-footer a { background: {{ theme.categoryTileOverlay }}; }
+      #featured-categories md-grid-tile-header { background: {{ theme.categoryTileOverlay }}; }
+      h1,h2,h3,h4,h5,h6,
+      #blog-body h1,
+      #blog-body h2,
+      #blog-body h3,
+      #blog-body blockquote:before,
+      #blog-body blockquote:after,
+      .ls-page h2,
+      .ls-page div.image-tiles a span,
+      .ls-heading { font-family: {{theme.headingFont}}; }
+      ul,li,p,blockquote,a,select,option,table,th,td,span,button,input,textarea,
+      .ls-heading-thin { font-family: {{theme.bodyFont}}; }
+      .ls-heading-small { font-family: {{theme.headingFont}}; }
+    </style>
+  </head>
+  <body ng-app="lsAngularApp" id="ls-store" ng-cloak ng-hide="$root.pendingRefresh">
 
-</head>
-  <header>
-    <div id="header-wrap">
-    <nav>
+    <!-- dont show the header on checkout screens -->
+    {% if page.name != "Checkout" %}
+      {{ partial('partial-sidenav') }}
+      {{ partial('partial-navbar') }}
+    {% endif %}
 
-      <div id="logo">
-        <a href="{{ site_url('/') }}"><img src="{{ theme.logoImage.thumbnail('auto', 'auto') }}" alt="" class="logo"></a>
-      </div>
-
-      <ul id="hamburger">
-        <li class="hamburger-dropdown">
-          <a href="#">☰</a>
-          <ul>
-            {% if customer %}
-              <li>
-                <a href="/profile">Your Account</a>
-              </li>
-              <li>
-                <a href="/orders">Your orders</a>
-              </li>
-              <li>
-                <a href="/logout">Logout</a>
-              </li>
-            {% else %}
-              <li>
-                <a href="/sign-in">Login</a>
-              </li>
-            {% endif %}
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/about">About us</a></li>
-            <li><a href="/blog">Blog</a></li>
-          </ul>
-        </li>
-      </ul>
-
-
-      <ul id="web-nav">
-        <li class="search-bar">
-          {{ open_form({'class': 'search', 'method': 'get', 'action': site_url('search')}) }}
-            <input type="text" name="query" value="{{query|unescape}}" placeholder="Search store&hellip;"/>
-          {{ close_form() }}
-        </li>
-        <li class="dropdown">
-          <a>Shop ▾</a>
-          {% tree categories %}
-          <ul>
-            <li><a href="/shop">Items</a></li>
-            {% for category in tree.items %}
-            <li>
-              <a href="/category/{{ category.fullUrlName }}">{{ category.name }}</a>
-              {% branch category.children %}
-            </li>
-            {% endfor %}
-          </ul>
-          {% endtree %}
-        </li>
-        <li><a href="/blog">Blog</a></li>
-        {% if customer %}
-          <li class="dropdown">
-            <a href="/profile">Your Account ▾</a>
-            <ul>
-              <li>
-                <a href="/orders">Your orders</a>
-              </li>
-              <li>
-                <a href="/logout">Logout</a>
-              </li>
-            </ul>
-          </li>
-        {% else %}
-          <li>
-            <a href="/sign-in">Login</a>
-          </li>
-        {% endif %}
-        <li id="mini-cart">{{ partial('shop-minicart') }}</li>
-      </ul>
-    </nav>
-    <nav id="mobile-nav">
-      <ul class="shop-nav">
-        <li class="dropdown">
-          <a>Shop ▾</a>
-          {% tree categories %}
-          <ul>
-            <li><a href="/shop">All items</a></li>
-            {% for category in tree.items %}
-            <li>
-              <a href="/category/{{ category.fullUrlName }}">{{ category.name }}</a>
-              {% branch category.children %}
-            </li>
-            {% endfor %}
-          </ul>
-          {% endtree %}
-        </li>
-        <li class="search-bar">
-          {{ open_form({'class': 'search', 'method': 'get', 'action': site_url('search')}) }}
-            <input type="text" name="query" value="{{query|unescape}}" placeholder="Search store&hellip;"/>
-          {{ close_form() }}
-        </li>
-      </ul>
-      <ul>
-        <li id="mini-cart">{{ partial('shop-minicart') }}</li>
-      </ul>
-    </nav>
-
-  </div>
-  </header>
-  <body>
-    {{ code_block('breadcrumbs') }}
-    {{ page() }}
-  </body>
-  <footer>
-    <div class="wrapper">
-      <ul>
-        <li><a href="{{ site_url('contact') }}">Contact</a></li>
-        <li><a href="{{ site_url('blog') }}">Blog</a></li>
-        <li><a href="{{ theme.linkedInUrl }}">Jobs</a></li>
-        <li><a href="{{ theme.twitterUrl }}">@LemonStand</a></li>
-      </ul>
-      <ul>
-        <li><a href="{{ site_url('about') }}">About</a></li>
-        <li><a href="{{ site_url('shop') }}">Shop</a></li>
-        <li><a href="{{ theme.facebookUrl }}">Facebook</a></li>
-        <li><a href="{{ site_url('privacy') }}">Privacy</a></li>
-      </ul>
-      <ul id="copyright">
-        <li>Made with &#127819; by <a href="https://lemonstand.com">LemonStand</a></li>
-      </ul>
+    <div class="container page-{{ page.name | lower}}" id="main-view">
+      {{ page() }}
     </div>
-  </footer>
+
+
+    <!-- dont show the full footer on checkout screens -->
+    {% if page.name != "Checkout" %}
+      {{ partial('partial-footer') }}
+    {% else %}
+      {{ partial('partial-mini-footer') }}
+    {% endif %}
+
+    <!-- loading spinner -->
+    <div layout="row" id="loading-spinner-container" ng-show="$root.loadingScreen" layout-align="center center">
+        <md-progress-circular md-mode="indeterminate" class="md-warn" md-diameter="40"></md-progress-circular>
+    </div>
+
+    <!-- flash messages -->
+    <script type="text/javascript">
+      setTimeout(function(){
+        window.flash('{{ flash() }}');
+      },500);
+    </script>
+
+  </body>
 </html>

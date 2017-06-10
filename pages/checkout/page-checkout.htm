@@ -1,21 +1,46 @@
 ---
+description: 'The head checkout page.'
 action: 'shop:checkout'
-template: checkout
+template: main
 protocol: all
 published: true
 name: Checkout
 url: /checkout
 ---
-{% if not items.count %}
-	<div class="wrapper">
-		<h1>{{ page.title }}</h1>
-		<hr>
-		<h3>Your cart is empty!<a href="{{ site_url('shop') }}"> Continue shopping.</a></h3>
-	</div>
-{% else %}
-	<div id="checkout-page">
-		{{ partial('partial-checkout') }}
-	</div>
 
-    {{ code_block('script') }}
-{% endif %}
+{{ partial('partial-banner-alt') }}
+
+<div layout="column" layout-align="center center" class="bg-white" >
+  <div id="checkout-page" ng-controller="CheckoutCtrl" layout-fill recompile>
+    {% if not items.count %}
+    <div layout="column" class="content-container padding-y-large" layout-align="start center">
+      <h2 class="ls-heading">Your cart is empty</h2>
+      <div layout="column">
+        <md-button class="ls-button  margin-y-medium" ng-href="{{ site_url('products') }}">Continue shopping</md-button>
+      </div>
+    </div>
+    {% else %}
+      <div layout="column" class="content-container checkout-container padding-y-large" layout-align="start center">
+        <div layout="row" layout-xs="column" class="max-width-1024 padding-mobile" layout-fill>
+          <div layout="column" flex-order-xs="2">
+            <div layout="row" layout-xs="column" id="checkout-progress" class="margin-bottom-small">
+              {{ partial('shop-checkout-progress') }}
+            </div>
+            <div id="checkout-steps">
+              {{ partial('shop-checkout-steps') }}
+            </div>
+          </div>
+             
+          <div id="checkout-minicart" flex-order-xs="1">
+            {{ partial('shop-checkout-cart') }}
+          </div>
+        </div>
+      </div>
+
+      {% if hasFeature('saved-cards') %}
+          {{ code_block('script') }}
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+

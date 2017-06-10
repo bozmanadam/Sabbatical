@@ -1,0 +1,10 @@
+---
+description: 'Amazon checkout controller'
+---
+{% if step == 'billing_info' %}
+  {{ partial('shop-amazon-checkout-address') }}
+{% elseif step == 'shipping_method' %}
+  {{ partial('shop-amazon-checkout-shippingmethod') }}
+{% elseif step == 'pay' %}
+  {{ partial('shop-amazon-checkout-pay') }}
+{% endif %}

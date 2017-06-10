@@ -1,4 +1,5 @@
 ---
+description: 'Home page.'
 action: 'shop:products'
 template: main
 protocol: all
@@ -6,73 +7,138 @@ published: true
 name: Home
 url: /
 ---
-<section class="wrapper">
-	<div id="home-details">
-		<h1>Online Alcohol Shopping.</h1>
-		<h1>Delivered Within 20 Min. 🚀</h1>
-		<h3>1 Day Only: <strong>30% Off All Items.</strong></h3>
-		<h3>Use Coupon Code <span class="coupon"><strong>#FaceOff2015</strong></span></h3>
-		<a class="button call-to-action" href="/shop">Shop Now</a>
-		<a class="blue" id="how-does-it-work" href="#featured-content">How does it work?</a>
-	</div>
-	<div class="carousel-wrap">
-		<div id="featured-carousel">
-		{% set featuredCollection = 'display'|collection %}
-		{% paginate featuredCollection.products by 1 %}
-	    <ul>
-			{% for product in pagination.items %}
-				{% set on_sale = product.onSale %}
 
-        <li class="product">
-					<figure>
-					  <a href="/product/{{ product.url_name }}"><img src="{{ product.images.first.thumbnail('auto', 'auto')|default('http://placehold.it/580x352') }}" alt="{{ product.images.first.description }}" title="{{ product.images.first.title }}"/></a>
-					  <figcaption>
-						  <h3><a href="/product/{{ product.url_name }}" class="btn btn-default">{{ product.name }}</a></h3>
-							<h2>{{ product.price|currency }}</h2>
-							{% if on_sale %}
-								<h2 class="oldprice">{{ product.fullPrice|currency }}</h2>
-							{% endif %}
-						</figcaption>
-					</figure>
-        </li>
+<script type="text/javascript">
+  var products = {
+    "products": [
+      {{ partial("partial-product", { "products": products }) }}
+    ]
+  };
+  var featuredProducts = 
+  {% set featuredCollection = 'featured'|collection.products %}
+  {% if not featuredCollection %}
+    {% set featuredCollection = products %}
+  {% endif %}
+  {% paginate featuredCollection by 10 %}
+    {
+      "products": [
+        {{ partial("partial-product", { "products": pagination.items }) }}
+      ]
+    }
+  {% endpaginate %}
 
-			{% endfor %}
-	    </ul>
-		{% endpaginate %}		
-	</div>
-	</div>
-	
-</section>
-<section class="home-banner">
-	<div class="banner">
-		<h1>{{ theme.bannerText }}</h1>
-	</div>
-</section>
-<section id="featured-content">
-	<h1>How Does It Work?</h1>
-	<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus hendrerit. Pellentesque aliquet nibh nec urna. In nisi neque, aliquet vel, dapibus id, mattis vel, nisi. Sed pretium, ligula sollicitudin laoreet viverra, tortor libero sodales leo, eget blandit nunc tortor eu nibh. Nullam mollis. Ut justo. Suspendisse potenti.</p>
-	<a class="button call-to-action" href="/shop">Shop Now</a>
-</section>
-<section>
-	<div id="featured-collection">
-		<h1>Check These Out</h1>
-		{% set featuredCollection = 'featured'|collection %}
-		{% paginate featuredCollection.products by 4 %}
-			{% for product in pagination.items %}
+</script>
 
-				{% set on_sale = product.onSale %}
-				<div class="product featured-product">
-					<a href="/product/{{ product.url_name }}">
-						<img src="{{ product.images.first.thumbnail('280', '280') }}" >
-					</a>
-					<h3><a href="/product/{{ product.url_name }}" class="btn btn-default">{{ product.name }}</a></h3>
-					<h2 class="price">{{ product.price|currency }}</h2>
-					{% if on_sale %}
-						<h2 class="oldprice">{{ product.fullPrice|currency }}</h2>
-					{% endif %}
-				</div>
+<div ng-controller="HomeCtrl">
 
-			{% endfor %}
-		{% endpaginate %}
-	</div>
-</section>
+    {{ partial('partial-banner') }}
+
+  {% if theme.homeRibbon %}
+    <div layout="row" layout-align="center center" layout-padding class="ls-ribbon">
+      <div layout="row" layout-xs="column" layout-align="center center" layout-align-xs="space-around center" class="content-container">
+        <div class="ribbon-container">
+          {{ widget_block('home-ribbon-one')}}
+        </div>
+        <div class="ribbon-container">
+          {{ widget_block('home-ribbon-two')}}
+        </div>
+        <div class="ribbon-container">
+          {{ widget_block('home-ribbon-three')}}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <md-content layout="column" class="padding-y-large">
+    {% if theme.homeCategories %}
+    <div layout="column" layout-align="center center" id="featured-categories" >
+      <div layout-fill class="content-container">
+        <md-grid-list
+          md-cols="4"
+          md-row-height="1:1"
+          md-gutter="20px"
+
+          md-cols-xs="1"
+          md-row-height-xs="2:1"
+          md-gutter-xs="10px"
+
+          md-cols-sm="2"
+          md-row-height-sm="1:1"
+          md-gutter-sm="20px">
+
+          <md-grid-tile
+            class="background-cover"
+            ng-repeat="category in categories | orderBy:'api_code' | limitTo:4 track by $index"
+            ng-style="{ 'background-image': 'url('+ category.thumbnail +')'  }"
+            md-rowspan="[[($index == 2 || $index == 3) ? 1 : 2]]"
+            md-colspan="[[ $index == 1 ? 2 : 1]]"
+            md-rowspan-xs="1"
+            md-colspan-xs="1"
+            md-rowspan-sm="1"
+            md-colspan-sm="1">
+
+            <md-grid-tile-header ng-style="{ 'padding-right' : $index === 1 ? '25px' : '0' }">
+              <h2 class="ls-heading">[[ category.name ]]</h2>
+            </md-grid-tile-header>
+            <md-grid-tile-footer>
+              <md-button ng-href="categories/[[ category.url_name ]]" class="md-lowercase md-body-1 no-margin-left">
+                View Collection
+              </md-button>
+            </md-grid-tile-footer>
+          </md-grid-tile>
+        </md-grid-list>
+      </div>
+    </div>
+    {% endif %}
+
+    <div layout="column" layout-align="center center" id="featured-products">
+      <div layout-fill class="content-container padding-mobile">
+        <h1 class="ls-heading text-center padding-y-medium">Featured products</h1>
+        {{ partial('partial-product-tiles') }}
+        <div layout="row" layout-padding layout-align="center center" class="padding-y-medium">
+          <md-button class="ls-button md-button-outline " ng-click="productListLimit = productListLimit + 5" ng-hide="productListLimit === 10">View more</md-button>
+          <md-button class="ls-button md-button-outline " ng-href="/products" ng-show="productListLimit === 10">View all</md-button>
+        </div>
+      </div>
+    </div>
+  </md-content>
+
+  {% if theme.featuredAdPanel %}
+    {{ partial('partial-featured-sale') }}
+  {% endif %}
+  
+  {% if theme.blogOnHomepage %}
+  <div layout="column" layout-align="center center" id="featured-blog">
+    <div layout-fill class="content-container padding-mobile">
+      <h1 class="ls-heading text-center padding-y-large">Blog</h1>
+
+      <div layout="row" layout-align="start start" class="card-carousel">
+        <div ng-repeat="post in $theme.blog | orderBy:'-publish_date' | limitTo:blogPostLimit track by $index" class="card-carousel-card" flex>
+          {{ partial('partial-blog-card') }}
+        </div>
+      </div>
+
+      <div layout="row" layout-padding layout-align="center center" class="padding-y-medium">
+        <md-button class="ls-button md-button-outline " ng-click="blogPostLimit = blogPostLimit + 4" ng-hide="blogPostLimit === 8">View more</md-button>
+        <md-button class="ls-button md-button-outline " ng-href="/blog" ng-show="blogPostLimit === 8">View all</md-button>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+
+  <div layout="column" layout-align="center center" class="padding-y-large padding-mobile text-white background-cover" id="sign-up" style="background-image: url('{{ theme.signUpBackground.thumbnail(1920,'auto') }}');">
+    <div layout-fill class="content-container">
+      <h2 class="ls-heading text-center">Sign up</h2>
+      <p class="md-body-1 text-center line-height-15 padding-y-medium">{{ theme.signUpText }}</p>
+      <div layout="row" layout-align="center center">
+        {{ partial('partial-mailchimp') }}
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+</div>
