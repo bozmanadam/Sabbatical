@@ -11,7 +11,7 @@
   <meta name="Keywords" content="{{ page.keywords }}"/>
   <link rel="icon" type="image/png" href="{{ theme.faviconImage.thumbnail('16', '16') }}"/>
 
-  <title>{{ page.title }} | {{ theme.storeTitle }}</title>
+  <title>Sabbatical</title>
 
   <link rel="stylesheet" type="text/css" href="/cms/lemonstand.css">
   <link rel="stylesheet" type="text/css" href="{{ 'stylesheets/main.css'|theme_resource }}">
@@ -67,7 +67,7 @@
           <a>Shop ▾</a>
           {% tree categories %}
           <ul>
-            <li><a href="/shop">All items</a></li>
+            <li><a href="/shop">Items</a></li>
             {% for category in tree.items %}
             <li>
               <a href="/category/{{ category.fullUrlName }}">{{ category.name }}</a>
