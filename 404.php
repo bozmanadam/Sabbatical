@@ -2,58 +2,63 @@
 /**
  * The template for displaying 404 pages (not found).
  *
- * @package WordPress
- * @subpackage Shop Isle
+ * @link https://codex.wordpress.org/Creating_an_Error_404_Page
+ *
+ * @package Talon
  */
 
 get_header(); ?>
-	<!-- Wrapper start -->
-	<div class="main">
+<div class="row">
+	<div id="primary" class="content-area col-md-8">
+		<main id="main" class="site-main" role="main">
 
-		<!-- Home start -->
-		<?php
+			<section class="error-404 not-found">
+				<header class="page-header">
+					<h1 class="page-title"><?php esc_html_e( 'Oops! That page can&rsquo;t be found.', 'talon' ); ?></h1>
+				</header><!-- .page-header -->
 
-		$shop_isle_404_background = get_theme_mod( 'shop_isle_404_background', get_template_directory_uri() . '/assets/images/404.jpg' );
+				<div class="page-content">
+					<p><?php esc_html_e( 'It looks like nothing was found at this location. Maybe try one of the links below or a search?', 'talon' ); ?></p>
 
-		if ( ! empty( $shop_isle_404_background ) ) :
-			echo '<section class="home-section home-parallax home-fade home-full-height bg-dark error-page-background" data-background="' . esc_url( $shop_isle_404_background ) . '">';
-		else :
-			echo '<section class="home-section home-parallax home-fade home-full-height bg-dark error-page-background">';
-		endif;
-		?>
-			<div class="hs-caption">
-				<div class="caption-content">
 					<?php
-						/* title */
-						$shop_isle_404_title = get_theme_mod( 'shop_isle_404_title',__( 'Error 404', 'shop-isle' ) );
-					if ( ! empty( $shop_isle_404_title ) ) :
-						echo '<div class="hs-title-size-4 font-alt mb-30 error-page-title">';
-						echo shop_isle_sanitize_text( $shop_isle_404_title );
-						echo '</div>';
-						endif;
+						get_search_form();
 
-						/* text */
-						$shop_isle_404_text = get_theme_mod( 'shop_isle_404_text','The requested URL was not found on this server.<br> That is all we know.' );
-					if ( ! empty( $shop_isle_404_text ) ) :
-						echo '<div class="font-alt error-page-text">';
-						echo shop_isle_sanitize_text( $shop_isle_404_text );
-						echo '</div>';
-						endif;
+						the_widget( 'WP_Widget_Recent_Posts' );
 
-						/* button */
-						$shop_isle_404_link = get_theme_mod( 'shop_isle_404_link','#' );
-						$shop_isle_404_label = get_theme_mod( 'shop_isle_404_label',__( 'Back to home page', 'shop-isle' ) );
-
-					if ( ! empty( $shop_isle_404_link ) && ! empty( $shop_isle_404_label ) ) :
-						echo '<div class="font-alt mt-30 error-page-button-text">';
-						echo '<a href="' . esc_url( $shop_isle_404_link ) . '" class="btn btn-border-w btn-round">' . esc_html( $shop_isle_404_label ) . '</a>';
-						echo '</div>';
-						endif;
+						// Only show the widget if site has multiple categories.
+						if ( talon_categorized_blog() ) :
 					?>
-				</div>
-			</div>
 
-		</section >
-		<!-- Home end -->
+					<div class="widget widget_categories">
+						<h2 class="widget-title"><?php esc_html_e( 'Most Used Categories', 'talon' ); ?></h2>
+						<ul>
+						<?php
+							wp_list_categories( array(
+								'orderby'    => 'count',
+								'order'      => 'DESC',
+								'show_count' => 1,
+								'title_li'   => '',
+								'number'     => 10,
+							) );
+						?>
+						</ul>
+					</div><!-- .widget -->
 
-<?php get_footer(); ?>
+					<?php
+						endif;
+
+						/* translators: %1$s: smiley */
+						$archive_content = '<p>' . sprintf( esc_html__( 'Try looking in the monthly archives. %1$s', 'talon' ), convert_smilies( ':)' ) ) . '</p>';
+						the_widget( 'WP_Widget_Archives', 'dropdown=1', "after_title=</h2>$archive_content" );
+
+						the_widget( 'WP_Widget_Tag_Cloud' );
+					?>
+
+				</div><!-- .page-content -->
+			</section><!-- .error-404 -->
+
+		</main><!-- #main -->
+	</div><!-- #primary -->
+</div>
+<?php
+get_footer();

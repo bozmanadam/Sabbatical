@@ -2,58 +2,37 @@
 /**
  * The template for displaying all single posts.
  *
- * @package WordPress
- * @subpackage Shop Isle
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#single-post
+ *
+ * @package Talon
  */
 
 get_header(); ?>
+<div class="row">
+	<div id="primary" class="content-area col-md-8">
+		<main id="main" class="site-main" role="main">
 
-<!-- Wrapper start -->
-	<div class="main">
+		<?php
+		while ( have_posts() ) : the_post();
 
-		<!-- Post single start -->
-		<section class="page-module-content module">
-			<div class="container">
+			get_template_part( 'template-parts/content', 'single' );
 
-				<div class="row">
+			the_post_navigation();
 
-					<!-- Content column start -->
-					<div class="col-sm-8">
+			// If comments are open or we have at least one comment, load up the comment template.
+			if ( comments_open() || get_comments_number() ) :
+				comments_template();
+			endif;
 
-						<?php while ( have_posts() ) : the_post(); ?>
+		endwhile; // End of the loop.
+		?>
 
-							<?php
+		</main><!-- #main -->
+	</div><!-- #primary -->
 
-							do_action( 'shop_isle_single_post_before' );
-
-							get_template_part( 'content', 'single' );
-
-							/**
-							 * After single post hook.
-							 *
-							 * @hooked shop_isle_post_nav - 10
-							 */
-							do_action( 'shop_isle_single_post_after' );
-							?>
-
-						<?php endwhile; // end of the loop. ?>
-
-					</div>
-					<!-- Content column end -->
-
-					<!-- Sidebar column start -->
-					<div class="col-xs-12 col-sm-4 col-md-3 col-md-offset-1 sidebar">
-
-						<?php do_action( 'shop_isle_sidebar' ); ?>
-
-					</div>
-					<!-- Sidebar column end -->
-
-				</div><!-- .row -->
-
-			</div>
-		</section>
-		<!-- Post single end -->
-		
-
+<?php
+if ( get_theme_mod('fullwidth_single', 0) != 1 ) :
+	get_sidebar();
+endif; ?>
+</div>
 <?php get_footer(); ?>
